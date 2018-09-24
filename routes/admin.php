@@ -6,7 +6,7 @@ Route::group([
         'admin',
     ],
 ], function (RouteRegisterContract $route) {
-    Route::get('/', 'HomeController@index');
+    Route::get('/admin', 'HomeController@index');
     Route::get('/loginOut', 'HomeController@loginOut');
     Route::get('/home/pwd', 'HomeController@pwd');
     Route::post('/home/pwdSave', 'HomeController@save');

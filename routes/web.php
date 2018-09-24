@@ -17,4 +17,4 @@ Route::get('/login/welcome', function () {
     return view('public.welcome');
 });
 Route::namespace ('admin')->group(base_path('routes/admin.php'));
-Route::any('/test', 'test\TestController@index');
+Route::post('/UploadImage', 'Controller@UploadImage');

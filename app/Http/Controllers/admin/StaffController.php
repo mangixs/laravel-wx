@@ -16,6 +16,7 @@ class StaffController extends Controller
             'true_name' => ['name' => 'true_name', 'preg' => ':ch', 'notice' => '请输入正确的用户名!', 'not_null' => false],
             'sex' => ['name' => 'sex', 'preg' => '/^[1|2]{1}$/', 'notice' => '请选择用户性别', 'not_null' => false],
             'header_img' => ['name' => 'header_img', 'preg' => ':notnull', 'notice' => '请上传用户头像', 'not_null' => false],
+            'newpwd' => ['name' => 'newpwd', 'preg' => '/^[\w]{4,16}/', 'notice' => '用户密码错误', 'not_null' => false],
         ],
     ];
     public function index()
@@ -57,12 +58,15 @@ class StaffController extends Controller
         switch ($action) {
             case 'add':
                 $data['created_at'] = $data['update_at'];
-                $data['pwd'] = md5('xykj2018');
+                $data['pwd'] = md5('123@456');
                 $id = staff::insertGetId($data);
                 break;
             case 'edit':
                 $id = $request->post('id');
-                $data['pwd'] = md5($request->post('newpwd'));
+                $pwd = $request->post('newpwd');
+                if(!empty($pwd)){
+                    $data['pwd'] = md5($pwd);
+                }
                 staff::where('id', $id)->update($data);
                 break;
             default:

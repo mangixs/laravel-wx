@@ -63,7 +63,9 @@
         <div class="detail-row">
         	<div class="row-label">图标</div>
         	<div class="row-input">
-        		<a href="javascript:;" class="file" id="upload_btn" >选择文件</a>  
+        		<a href="javascript:;" class="file">选择文件
+					<input id="upload_btn" type="file" name="img" multiple>	
+				</a>  
         	</div>
         </div>
         <div class="detail-row">
@@ -116,16 +118,23 @@
 
 @section('javascript')
 @parent
-<script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.config.js"></script>
-<script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.all.min.js"> </script>
-<script type="text/javascript" charset="utf-8" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
-<script type="text/javascript" charset="utf-8" src="/ueditor/file_upload_v2.js"></script>
 <script type="text/javascript">
 $(function(){
-     $('#upload_btn').fileUpload(function(t,arg){
-        $('.img-box').html( '<img src="'+arg[0].src+'" style="width:48px;height:48px;" />' );
-        $("input[name='icon']").val(arg[0].src);
+    $('#upload_btn').fileupload({
+        dataType: 'json',
+        url: "{{url('UploadImage')}}",
+        done: function(e, data) {
+            if(data.result.result=="SUCCESS"){
+                $('.img-box').html( '<img src="'+data.result.path+'" style="width:48px;height:48px;" />' );
+                $("input[name='icon']").val(data.result.path);
+            }else{
+                parent.$.warn(data.result.msg);
+            }
+           
+        }
     });
+})
+$(function(){
     $("#auth").click(function(){
     	$('.key_bg,.key_box').show();
     })

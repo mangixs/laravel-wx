@@ -23,6 +23,9 @@
 <script src="/js/jquery-3.0.0.min.js" type="text/javascript"></script>
 <script src="/js/input_allow.js" type="text/javascript"></script>
 <script src="/js/edit.js" type="text/javascript"></script>
+<script type="text/javascript" src="/jQuery-File-Upload/js/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="/jQuery-File-Upload/js/jquery.fileupload.js"></script>
+<script type="text/javascript" src="/jQuery-File-Upload/js/jquery.iframe-transport.js"></script>
 @show
 </body>
 </html>

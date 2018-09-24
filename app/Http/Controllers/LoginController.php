@@ -11,13 +11,13 @@ class LoginController extends Controller
 {
     public function login()
     {
-        return view('login.index');
+        return view('login.login');
     }
     public function captcha(Request $request)
     {
         $randStr = randStr(4);
-        Redis::del('mini_login_captcha');
-        Redis::set('mini_login_captcha', $randStr);
+        session_start();
+        $_SESSION['mini_login_captcha'] = $randStr;
         $code = new Code(['code' => $randStr]);
         return $code->show();
     }
@@ -27,7 +27,12 @@ class LoginController extends Controller
         $username = $request->post('username');
         $pwd = $request->post('password');
         $captcha = $request->post('captcha');
-        $serverCaptcha = Redis::get('mini_login_captcha');
+        $num = Redis::get($username . 'errorNumber');
+        if ((int) $num >= 5) {
+            return response()->json(['result' => 'ERROR', 'msg' => '错误次数过多，稍后再试']);
+        }
+        session_start();
+        $serverCaptcha = $_SESSION['mini_login_captcha'];
         if (strtoupper($captcha) != strtoupper($serverCaptcha)) {
             return response()->json(['result' => 'ERROR', 'msg' => '验证码错误']);
         }
@@ -40,6 +45,11 @@ class LoginController extends Controller
         $db = new login();
         $ret = $db->checkLogin($username, $pwd);
         if (!isset($ret->id)) {
+            if (empty($num)) {
+                Redis::setex($username . 'errorNumber', 300, 1);
+            } else {
+                Redis::setex($username . 'errorNumber', 300, (int) $num + 1);
+            }
             return response()->json(['result' => 'LOGIN_ERROR', 'msg' => '用户名密码错误']);
         }
         unset($ret['pwd']);
@@ -52,7 +62,6 @@ class LoginController extends Controller
             $jobId[] = $v->job_id;
         }
         $ret['key'] = $this->getKey($jobId);
-        Redis::del('mini_login_captcha');
         session(['staff_object_session' => serialize($ret)]);
         return response()->json(['result' => 'SUCCESS', 'msg' => '登录成功', 'url' => $url]);
     }

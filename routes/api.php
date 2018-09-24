@@ -12,5 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::get('/user', 'LoginController@test');
+Route::group(['prefix' => 'v1','namespace' => 'api','middleware'=>['miniApiCheck']],function () {
+   Route::post('/login','LoginController@login');
+   Route::get('/homeBanner','HomeController@banner');
+});

@@ -56,7 +56,9 @@
                 <span class="must">文章首图:</span>
             </div>
             <div class="row-input">
-                <a href="javascript:;" class="file" id="upload_btn">选择文件 </a>
+                <a href="javascript:;" class="file">选择文件 
+                    <input id="upload_btn" type="file" name="img" multiple>
+                </a>
             </div>
         </div>
         <div class="detail-row">
@@ -107,11 +109,20 @@
 <script type="text/javascript">
 var editor;
 $(function(){
-    $('#upload_btn').fileUpload(function(t,arg){
-        $('.img-box').html( '<img src="'+arg[0].src+'" />' );
-        $("input[name='first_img']").val(arg[0].src);
-    });
     editor = UE.getEditor('container');
+    $('#upload_btn').fileupload({
+        dataType: 'json',
+        url: "{{url('UploadImage')}}",
+        done: function(e, data) {
+            if(data.result.result=="SUCCESS"){
+                 $('.img-box').html( '<img src="'+data.result.path+'" />' );
+                $("input[name='first_img']").val(data.result.path);
+            }else{
+                parent.$.warn(data.result.msg);
+            }
+           
+        }
+    });
 })
 const editObj = new edit();
 @if($action !='add')

@@ -1,7 +1,7 @@
 <?php
 namespace App\models\admin;
 
-use App\Models\search;
+use App\models\search;
 use DB;
 
 class staff extends search

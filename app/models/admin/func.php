@@ -1,8 +1,8 @@
 <?php
 namespace App\models\admin;
 
-use App\Models\search;
-use DB;
+use App\models\search;
+
 class func extends search
 {
     protected $table = 'background_func';
@@ -14,14 +14,14 @@ class func extends search
     }
     public function pageData(&$request)
     {
-		$this->setSearch($this, $request);
-		$data['page'] = $this->setPage($this,$request);
-		$data['data'] = $this->select('key as keys', 'func_name')->orderBy('key', 'asc')->get();
-		return $data;
-	}
-	public function single($id)
-	{
-		$data = $this->select('key as keys','func_name')->where('key',$id)->first();
-		return $data;
-	}
+        $this->setSearch($this, $request);
+        $data['page'] = $this->setPage($this, $request);
+        $data['data'] = $this->select('key as keys', 'func_name')->orderBy('key', 'asc')->get();
+        return $data;
+    }
+    public function single($id)
+    {
+        $data = $this->select('key as keys', 'func_name')->where('key', $id)->first();
+        return $data;
+    }
 }

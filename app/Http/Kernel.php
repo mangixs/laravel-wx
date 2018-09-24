@@ -44,6 +44,9 @@ class Kernel extends HttpKernel
         'admin' => [
             'ability',
         ],
+        'miniApiCheck'=>[
+            'apicheck',
+        ]
     ];
 
     /**
@@ -61,5 +64,6 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'ability' => \App\Http\Middleware\AdminCheckMiddleware::class,
+        'apicheck' => \App\Http\Middleware\apicheck::class,
     ];
 }
