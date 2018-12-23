@@ -75,6 +75,7 @@ class edit {
                         case 'hidden':
                         case 'datetime-local':
                         case 'date':
+                        case 'number':
                         case 'color':
                             tag.val(v);
                             break;

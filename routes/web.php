@@ -18,3 +18,4 @@ Route::get('/login/welcome', function () {
 });
 Route::namespace ('admin')->group(base_path('routes/admin.php'));
 Route::post('/UploadImage', 'Controller@UploadImage');
+Route::namespace ('front')->group(base_path('routes/front.php'));

@@ -6,6 +6,7 @@ use App\libraries\classes\FormCheck;
 use App\models\admin\func;
 use DB;
 use Illuminate\Http\Request;
+use App\libraries\classes\search;
 
 class FuncController extends Controller
 {
@@ -23,7 +24,11 @@ class FuncController extends Controller
     }
     public function pageData(Request $request)
     {
-        $data = (new func())->pageData($request);
+        $m = new search();
+		$db=DB::table('background_func');
+		$m->setSearch($db,$request);
+		$data['page']=$m->setPage($db,$request);
+		$data['data']=$db->select('key as keys','func_name')->orderBy('key', 'asc')->get();
         return response()->json($data);
     }
     public function add()

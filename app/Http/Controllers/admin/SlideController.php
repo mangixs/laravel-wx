@@ -6,6 +6,7 @@ use App\libraries\classes\FormCheck;
 use App\models\admin\slide;
 use DB;
 use Illuminate\Http\Request;
+use App\libraries\classes\search;
 
 class SlideController extends Controller
 {
@@ -26,8 +27,19 @@ class SlideController extends Controller
     }
     public function pageData(Request $request)
     {
-        $data = (new slide())->pageData($request);
-        return response()->json($data);
+        $m=new search;
+        $db=DB::table('slide');
+        $db->where(['slide.valid'=>1]);
+		$m->setSearch($db,$request);
+		$data['page']=$m->setPage($db,$request);
+        $data['data'] = $db->select('slide.id', 'slide.title', 'slide.img', 'slide.sort', 'slide.update_at', 'slide_type.named as type')
+            ->leftJoin('slide_type', 'slide_type.id', '=', 'slide.type')
+            ->orderBy('slide.update_at', 'desc')
+            ->get();
+        foreach ($data['data'] as $key => &$v) {
+            $v->update_at = date('Y-m-d H:i:s', $v->update_at);
+		}
+		return response()->json($data);
     }
     public function add()
     {

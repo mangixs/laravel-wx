@@ -6,6 +6,7 @@ use App\libraries\classes\FormCheck;
 use App\models\admin\article;
 use DB;
 use Illuminate\Http\Request;
+use App\libraries\classes\search;
 
 class ArticleController extends Controller
 {
@@ -27,8 +28,20 @@ class ArticleController extends Controller
     }
     public function pageData(Request $request)
     {
-        $data = (new article())->pageData($request);
-        return response()->json($data);
+        $m = new search();
+		$db=DB::table('article');
+        $m->setSearch($db,$request);
+        $db->where(['article.valid'=>1]);
+		$ret['page'] =$m->setPage($db,$request);
+		$ret['data'] = $db->select('article.id', 'article.title', 'article_type.named as type', 'article.update_at', 'article.first_img', 'article.sort')
+            ->leftJoin('article_type', 'article_type.id', '=', 'article.type')
+            ->orderBy('article.update_at', 'desc')
+            ->where('article.valid', 1)
+            ->get();
+		foreach ($ret['data'] as  &$v) {
+			$v->update_at=date('Y-m-d H:i:s',$v->update_at);
+		}
+		return response()->json($ret);
     }
     public function add()
     {

@@ -33,17 +33,19 @@ class LoginController extends Controller
             if ($decryptRes === 'ok') {
                 $data = json_decode($data, true);
                 $userinfo = user::where('openid', $data['openId'])->first();
+                $user['nickname'] = $data['nickName'];
+                $user['avatarurl'] = $data['avatarUrl'];
+                $user['openid'] = $data['openId'];
+                $user['province'] = $data['province'];
+                $user['city'] = $data['city'];
+                $user['gender'] = $data['gender'];
+                $user['country'] = $data['country'];
                 if (empty($userinfo)) {
-                    $user['nickname'] = $data['nickName'];
-                    $user['avatarurl'] = $data['avatarUrl'];
                     $user['insert_at'] = time();
-                    $user['openid'] = $data['openId'];
-                    $user['province'] = $data['province'];
-                    $user['city'] = $data['city'];
-                    $user['gender'] = $data['gender'];
-                    $user['country'] = $data['country'];
                     $id = user::insertGetId($user);
                     $userinfo = user::find($id);
+                }else{
+                    user::where('openid',$data['openId'])->update($user);
                 }
                 return response()->json(['result' => 'SUCCESS', 'msg' => '登陆成功', 'data' => $userinfo]);
             } else {

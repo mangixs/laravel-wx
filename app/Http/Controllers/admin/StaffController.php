@@ -6,6 +6,7 @@ use App\models\admin\staff;
 use DB;
 use Illuminate\Http\Request;
 use App\libraries\classes\FormCheck;
+use App\libraries\classes\search;
 
 class StaffController extends Controller
 {
@@ -27,8 +28,12 @@ class StaffController extends Controller
     }
     public function pageData(Request $request)
     {
-        $data = (new staff())->pageData($request);
-        return response()->json($data);
+        $m=new search;
+		$db=DB::table('staff');
+		$m->setSearch($db,$request);
+		$data['page']=$m->setPage($db,$request);
+		$data['data']=$db->select('id','login_name','staff_num','sex','true_name')->get();
+		return response()->json($data);
     }
     public function add()
     {

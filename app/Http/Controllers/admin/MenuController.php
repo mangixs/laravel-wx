@@ -6,6 +6,7 @@ use App\libraries\classes\FormCheck;
 use App\models\admin\menu;
 use DB;
 use Illuminate\Http\Request;
+use App\libraries\classes\search;
 
 class MenuController extends Controller
 {
@@ -27,7 +28,11 @@ class MenuController extends Controller
     }
     public function pageData(Request $request)
     {
-        $data = (new menu())->pageData($request);
+        $m=new search;
+        $db=DB::table('menu');
+        $m->setSearch($db,$request);
+        $data['page']=$m->setPage($db,$request);
+        $data['data']=$db->where('parent',0)->select('id','named','url','sort','level','parent')->get();
         return response()->json($data);
     }
     public function childMenu(Request $request)

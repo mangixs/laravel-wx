@@ -6,6 +6,7 @@ use App\libraries\classes\FormCheck;
 use App\models\admin\job;
 use DB;
 use Illuminate\Http\Request;
+use App\libraries\classes\search;
 
 class JobController extends Controller
 {
@@ -22,8 +23,12 @@ class JobController extends Controller
     }
     public function pageData(Request $request)
     {
-        $data = (new job())->pageData($request);
-        return response()->json($data);
+        $m=new search;
+		$db=DB::table('admin_job');
+		$m->setSearch($db,$request);
+		$data['page']=$m->setPage($db,$request);
+		$data['data']=$db->select('id','job_name')->get();
+		return response()->json($data);
     }
     public function add()
     {

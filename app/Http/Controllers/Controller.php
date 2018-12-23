@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    public $every = 10;
     public function getKey($id)
     {
         $data = DB::table('admin_job_auth')->select('func_key', 'auth_key')->distinct()->whereIn('admin_job_id', $id)->get();
@@ -44,7 +45,7 @@ class Controller extends BaseController
     {
         $img = $request->file('img');
         if (empty($img)) {
-            return reponse()->json(['result' => 'ERROR', 'msg' => '图片为空']);
+            return response()->json(['result' => 'ERROR', 'msg' => '图片为空']);
         }
         $ext = $img->getClientOriginalExtension();
         $extArr = ['jpg', 'png', 'jpeg', 'gif'];
@@ -65,5 +66,9 @@ class Controller extends BaseController
         } else {
             return response()->json(['result' => 'ERROR', 'msg' => '上传文件失败', 'data' => $path]);
         }
+    }
+    public function returnRes($data=[])
+    {
+        return response()->json(['result' => 'SUCCESS', 'msg' => 'ok', 'data' => $data]);
     }
 }

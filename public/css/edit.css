@@ -21,7 +21,7 @@
     box-sizing:border-box;
     position:relative;
 }
-.row-input input[type='text'],.row-input input[type='password']{
+.row-input input[type='text'],.row-input input[type='password'],row-input input[type='number']{
 	width:50%;
 }
 .row-input select{
